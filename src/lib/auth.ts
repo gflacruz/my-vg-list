@@ -1,8 +1,32 @@
 import { betterAuth } from "better-auth";
-import { Pool } from "pg";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "@/db"; // your drizzle instance
+import * as schema from "@/db/schema";
+import { sendPasswordResetEmail } from "./email";
+
+console.log("Initializing drizzleAdapter...");
 
 export const auth = betterAuth({
-  database: new Pool({
-    // connection options
+  database: drizzleAdapter(db, {
+    provider: "pg", // or "mysql", "sqlite"
+    schema: { ...schema },
+    debug: true,
   }),
+  emailAndPassword: {
+    enabled: true,
+    passwordReset: {
+      enabled: true,
+      sendPasswordResetEmail: sendPasswordResetEmail,
+    },
+  },
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+    },
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+  },
 });
