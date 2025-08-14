@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSession, signOut } from "@/lib/auth-client";
+import Link from "next/link";
 
 export function Header() {
   const { data: session, isPending } = useSession();
@@ -19,7 +20,9 @@ export function Header() {
   return (
     <header className="flex items-center h-16 px-4 border-b shrink-0 md:px-6">
       <div className="flex items-center justify-between w-full">
-        <div className="text-2xl font-bold tracking-tight">MyVGList</div>
+        <Link href="/" className="text-2xl font-bold tracking-tight">
+          MyVGList
+        </Link>
         <div className="flex-1 flex justify-center px-4">
           <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-2xl">
             <Input
@@ -40,10 +43,12 @@ export function Header() {
             <div>Loading...</div>
           ) : session ? (
             <>
-              <Avatar>
-                <AvatarImage src={session.user.image || ""} />
-                <AvatarFallback>{session.user.name?.[0]}</AvatarFallback>
-              </Avatar>
+              <Link href={`/profile/${session.user.id}`}>
+                <Avatar>
+                  <AvatarImage src={session.user.image || ""} />
+                  <AvatarFallback>{session.user.name?.[0]}</AvatarFallback>
+                </Avatar>
+              </Link>
               <Button onClick={handleSignOut}>Sign Out</Button>
             </>
           ) : (

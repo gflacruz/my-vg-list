@@ -4,13 +4,10 @@ import { db } from "@/db"; // your drizzle instance
 import * as schema from "@/db/schema";
 import { sendPasswordResetEmail } from "./email";
 
-console.log("Initializing drizzleAdapter...");
-
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg", // or "mysql", "sqlite"
     schema: { ...schema },
-    debug: true,
   }),
   emailAndPassword: {
     enabled: true,
